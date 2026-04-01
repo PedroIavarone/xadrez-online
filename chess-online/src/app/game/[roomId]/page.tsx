@@ -20,11 +20,16 @@ interface MoveEvent {
   timerBlack: number;
 }
 
-const INITIAL_TIME = 10 * 60 * 1000; // 10 minutes
-
 export default function GamePage() {
   const { roomId } = useParams<{ roomId: string }>();
   const router = useRouter();
+
+  // Read stored time control (set on home page); default 10 min
+  const INITIAL_TIME = (() => {
+    if (typeof window === 'undefined') return 10 * 60 * 1000;
+    const stored = localStorage.getItem(`chess_time_${roomId}`);
+    return stored ? parseInt(stored) : 10 * 60 * 1000;
+  })();
 
   const [game]        = useState(() => new Chess());
   const [fen, setFen] = useState(game.fen());
@@ -317,6 +322,23 @@ export default function GamePage() {
               {connected ? 'Conectado' : 'Desconectado'}
             </span>
           </div>
+
+          {/* Time mode badge */}
+          {(() => {
+            const stored = typeof window !== 'undefined' ? localStorage.getItem(`chess_time_${roomId}`) : null;
+            const ms = stored ? parseInt(stored) : 10 * 60 * 1000;
+            const mins = Math.round(ms / 60000);
+            const label = mins === 1 ? 'Bullet 1\'' : mins === 3 ? 'Blitz 3\'' : mins === 10 ? 'Padrão 10\'' : `${mins}'`;
+            return (
+              <div style={{
+                background: 'var(--surface)', border: '1px solid var(--border)',
+                borderRadius: 8, padding: '6px 10px',
+                color: 'var(--gold)', fontSize: 11, fontWeight: 700,
+              }}>
+                ⏱ {label}
+              </div>
+            );
+          })()}
 
           {/* Room code */}
           <div style={{
