@@ -1,4 +1,4 @@
-[# ♟ Xadrez Online](https://chess-do-iavarone.vercel.app/)
+#♟ Xadrez Online
 
 [Plataforma de xadrez multiplayer em tempo real com suporte a **2 jogadores** e **4 jogadores**, rodando no browser sem instalação.](https://chess-do-iavarone.vercel.app/)
 
